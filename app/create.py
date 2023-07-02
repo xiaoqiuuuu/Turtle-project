@@ -19,18 +19,6 @@ def des_frame(window, frame, t):
     t.__del__()
 
 
-def update_pensize(value):
-    return
-    # canvas.delete("pen_indicator")  # 清除之前的指示点
-    # pensize = int(value)
-    # x = 50  # 指示点的横坐标
-    # y = 50  # 指示点的纵坐标
-    # radius = pensize / 2  # 指示点的半径
-    #
-    # canvas.create_oval(x - radius, y - radius, x + radius, y + radius,
-    #                    fill="black", tags="pen_indicator")
-
-
 def add_Keyframe(window, t):
     red = 69
     green = 149
@@ -59,7 +47,7 @@ def add_Keyframe(window, t):
     # 添加功能按钮对应的选择功能
     func = [lambda: move(frame, t), lambda: rotate(frame, t), lambda: Circle(frame, t),
             lambda: fill(frame, t), lambda: pen_color(frame, t), lambda: pen_size(frame, t),
-            lambda: pen_up(frame, t), lambda: pen_down(frame, t), lambda: cancel(frame, t),
+            lambda: pen_up(frame , t), lambda: pen_down(frame ,t), lambda: cancel(frame, t),
             lambda: clear(t), lambda: save(frame, t), lambda: des_frame(window, frame, t),
             ]
     for i in range(0, 12):
