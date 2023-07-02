@@ -1,25 +1,12 @@
-import time
+# 创建了主界面
+
+
 import tkinter as tk
-from tkinter import ttk
-from Myturtle import *
 from turtle import TurtleScreen
 from MyButton import MyButton
-from PIL import Image, ImageTk
+from create import create
+from template import template
 
-
-def increase_window_size(k, x, flg):
-    print(12)
-    current_width = window.winfo_width()
-    current_height = window.winfo_height()
-    if flg >= 500 or x == current_width:
-        return
-
-    if x - current_width > 1:
-        new_width = current_width + (x - current_width) // k + 5
-        window.geometry(f"{new_width}x{current_height}")
-        # 递归调用，并逐渐减小步长的值，实现减速变化的效果
-        window.update()
-        window.after(1, increase_window_size, k, x, flg + 1)
 
 
 if __name__ == "__main__":
@@ -34,7 +21,7 @@ if __name__ == "__main__":
 
     # 计算窗口在屏幕上的位置
     x = int((screen_width - 1200) / 2)
-    y = int((screen_height - 700) / 2)
+    y = int((screen_height - 700) / 2) - 30
 
     # 设置窗口的位置
     window.geometry(f"+{x}+{y}")
@@ -56,23 +43,14 @@ if __name__ == "__main__":
     screen = TurtleScreen(canvas)
     screen.bgcolor(f"#{red:02x}{green:02x}{blue:02x}")
 
-
-    def click():
-        increase_window_size(20, 1200,  0)
-        window.after(1, window.geometry(f"{1200}x{700}"))
-
-
-    # 添加主界面 按钮
-    button1 = MyButton(window, "../material/picture/2.png", click)
+    # 添加主界面功能按钮
+    button1 = MyButton(window, "../material/picture/2.png", lambda:[create(window,screen)])
     button1.place(x=100, y=60)
 
-    button2 = MyButton(window, "../material/picture/3.png", click)
+    button2 = MyButton(window, "../material/picture/3.png", lambda:template(window,screen))
     button2.place(x=100, y=180)
 
-    button3 = MyButton(window, "../material/picture/4.png", click)
+    button3 = MyButton(window, "../material/picture/4.png",lambda :exit(0))
     button3.place(x=100, y=300)
-
-    # 创建Turtle对象
-    myturtle = Myturtle(screen)
 
     window.mainloop()
