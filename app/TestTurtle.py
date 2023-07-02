@@ -1,16 +1,20 @@
-import tkinter as tk
-from PIL import ImageTk, Image
+from tkinter import *
+import win32gui
+from PIL import ImageGrab
 
-# 创建主窗口
-root = tk.Tk()
 
-# 加载图像
-image = Image.open("../material/picture/18.png")
-photo = ImageTk.PhotoImage(image)
+# 然后是获取Canvas的实现
+def CaptureScreen():
+    HWND = win32gui.GetFocus()  # 获取当前窗口句柄
+    rect = win32gui.GetWindowRect(HWND)  # 获取当前窗口坐标
+    im = ImageGrab.grab(rect)  # 截取目标图像
+    im.save("second.jpeg", 'jpeg')  # 前面一个参数是保存路径，后面一个参数是保存格式
 
-# 创建标签并显示图像
-label = tk.Label(root, image=photo)
-label.pack()
 
-# 运行主循环
-root.mainloop()
+root = Tk()
+cv = Canvas(root, width=300, height=150)
+cv.create_rectangle(10, 10, 50, 50)
+cv.pack()
+b = Button(root, text='截图', command=CaptureScreen)
+b.pack()
+mainloop()

@@ -5,6 +5,7 @@ class Myturtle(RawTurtle):
     def __init__(self, screen):
         if not Myturtle._flag:
             super().__init__(screen)
+            self.speed(4)
             red = 69
             green = 149
             blue = 199

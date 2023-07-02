@@ -1,20 +1,19 @@
 # 实现画笔的大部分功能
 
-import turtle as t
-import tkinter as tk
+from tkinter import colorchooser , messagebox
 from MyButton import *
 import math
+import win32gui
+from PIL import ImageGrab
 
 flg = 0
-
 
 def beginner(t):
     global flg
     if not flg:
-        clear(t)
+        t.clear()
         t.down()
         flg = 1
-    pass
 
 
 def ender(t):
@@ -41,31 +40,38 @@ def move(frame, t):
             new_y = - 332
         if new_y > 332:
             new_y = 332
-        if new_x < - 255:
-            new_x = -255
-        if new_x > 255:
-            new_x = 255
+        if new_x < - 285:
+            new_x = -285
+        if new_x > 285:
+            new_x = 285
         d = math.sqrt(pow(new_x - x, 2) + pow(new_y - y, 2))
         return d
 
     def left(t, d):
-        t.setheading(180)
+        if t.heading() != 180:
+            t.setheading(180)
         d = judge(t, d)
         t.forward(d)
 
     def right(t, d):
-        t.setheading(0)
+        if t.heading() != 0:
+            t.setheading(0)
         d = judge(t, d)
         t.forward(d)
 
     def up(t, d):
-        # 判断turtle 会不会走出画布
-        t.setheading(90)
+        if t.heading() != 90:
+            t.setheading(90)
         d = judge(t, d)
         t.forward(d)
 
     def down(t, d):
-        t.setheading(270)
+        if t.heading() != 270:
+            t.setheading(270)
+        d = judge(t, d)
+        t.forward(d)
+
+    def forward(t, d):
         d = judge(t, d)
         t.forward(d)
 
@@ -93,8 +99,11 @@ def move(frame, t):
     scale.place(x=180, y=5)
     scale.set(50)
 
+    forward_button = MyButton(popup, "../material/picture/26.png", lambda: forward(t, scale.get()))
+    forward_button.place(x=110, y=90)
+
     exit_button = MyButton(popup, "../material/picture/22.png", on_closing)
-    exit_button.place(x=185, y=75)
+    exit_button.place(x=210, y=90)
 
 
 def rotate(frame, t):
@@ -114,12 +123,29 @@ def Circle(frame, t):
 def fill(frame, t):
     beginner(t)
     print("fill")
-    pass
+    color = tk.colorchooser.askcolor(title="选择要填充颜色")
+    if color[1]:
+        # 获取选择的颜色值
+        selected_color = color[1]
+    else :
+        return
+    t.fillcolor(selected_color)
+    t.begin_fill()
+    button = MyButton(frame , "../material/picture/27.png" , lambda : closing(t))
+    button.place(x = 350 , y = 170)
+    def closing (t) :
+        t.end_fill()
+        button.destroy()
+        pass
 
 
 def pen_color(frame, t):
     print("pencolor")
-    pass
+    color = tk.colorchooser.askcolor(title="选择画笔颜色")
+    if color[1]:
+        # 获取选择的颜色值
+        selected_color = color[1]
+        t.color(selected_color)
 
 
 def pen_size(frame, t):
@@ -139,8 +165,15 @@ def pen_size(frame, t):
         y = 50  # 指示点的纵坐标
         radius = pensize / 2  # 指示点的半径
 
+        if isinstance(t.pencolor(), tuple):
+            color = f"#{int(t.pencolor()[0] * 255) :02x}{int(t.pencolor()[1] * 255):02x}{int(t.pencolor()[2] * 255):02x}"
+        else:
+            color = t.pencolor()
+
+        # print(color , type(color))
+
         canvas.create_oval(x - radius, y - radius, x + radius, y + radius,
-                           fill=t.pencolor(), tags="pen_indicator")
+                           fill=color, tags="pen_indicator")
 
     scale = tk.Scale(popup, from_=1, to=50, orient=tk.HORIZONTAL,
                      command=update_pensize)
@@ -170,19 +203,34 @@ def pen_down(frame, t):
 def cancel(frame, t):
     beginner(t)
     print("cancel")
-
-    pass
+    t.undo()
 
 
 def clear(t):
     print("clear")
-    t.clear()
+    result = messagebox.askyesno("警告", "是否清空画布？")
+    if result:
+        t.clear()
+    else:
+        return
 
 
 def save(frame, t):
     print("save")
-    pass
 
+    # 截屏
+
+    def CaptureScreen():
+        HWND = win32gui.GetFocus()
+        rect = win32gui.GetWindowRect(HWND)
+        x = rect[0]
+        x1 = x + frame.winfo_x()
+        y = rect[1]
+        y1 = y + frame.winfo_y()
+        im = ImageGrab.grab((x, y, x1, y1))
+        im.save("second.jpeg", 'jpeg')
+
+    CaptureScreen()
 
 def welcome(t):
     # 绘制欢迎图案
