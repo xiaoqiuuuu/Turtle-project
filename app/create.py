@@ -44,14 +44,20 @@ def add_Keyframe(window, t):
         button[-1].place(x=50 + (j % 2) * 300, y=380 + (j // 2) * 80)
     button[-1].config(command=lambda: des_frame(window, frame, t))
 
+    button.append(MyButton(frame, "../material/picture/28.png"))
+    # button[-1].place(x=50, y=460)
+    button.append(MyButton(frame, "../material/picture/29.png"))
+    button[-1].place(x=350, y=460)
+
     # 添加功能按钮对应的选择功能
     func = [lambda: move(frame, t), lambda: rotate(frame, t), lambda: Circle(frame, t),
             lambda: fill(frame, t), lambda: pen_color(frame, t), lambda: pen_size(frame, t),
-            lambda: pen_up(frame , t), lambda: pen_down(frame ,t), lambda: cancel(frame, t),
+            lambda: pen_up(frame,button[-2] , button[-1], t), lambda: pen_down(frame,button[-2] , button[-1], t), lambda: cancel(frame, t),
             lambda: clear(t), lambda: save(frame, t), lambda: des_frame(window, frame, t),
             ]
     for i in range(0, 12):
         button[i].config(command=func[i])
+
 
 
 def create(window, screen):

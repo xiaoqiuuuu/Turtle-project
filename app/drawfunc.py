@@ -1,12 +1,13 @@
 # 实现画笔的大部分功能
 
-from tkinter import colorchooser , messagebox
+from tkinter import colorchooser, messagebox
 from MyButton import *
 import math
 import win32gui
 from PIL import ImageGrab
 
 flg = 0
+
 
 def beginner(t):
     global flg
@@ -107,17 +108,88 @@ def move(frame, t):
 
 
 def rotate(frame, t):
+    def update_heading(t, angle):
+        t.left(angle)
+
+    def reset(t):
+        t.seth(0)
+
+    def on_closing():
+        popup.destroy()
+
     beginner(t)
     print("rotate")
-    pass
+    popup = tk.Frame()
+    popup = tk.Frame(frame, width=300, height=150)
+    popup.place(x=300, y=0)
+    canvas = tk.Canvas(popup, width=300, height=150, bg=f"#{69:02x}{149:02x}{199:02x}")
+    canvas.pack()
+    scale = tk.Scale(popup, from_=0, to=360, orient="horizontal", label="旋转角度:")
+    scale.place(x=180, y=5)
+    scale.set(10)
+    button1 = MyButton(popup, "../material/picture/23.png", lambda: update_heading(t, scale.get()))
+    button1.place(y=90, x=30)
+    button2 = MyButton(popup, "../material/picture/21.png", lambda: reset(t))
+    button2.place(y=15, x=50)
+    exit_button = MyButton(popup, "../material/picture/22.png", on_closing)
+    exit_button.place(x=210, y=90)
 
 
 def Circle(frame, t):
+    def rot(x, y, theta):
+        x_new = x * math.cos(theta) - y * math.sin(theta)
+        y_new = x * math.sin(theta) + y * math.cos(theta)
+        return x_new, y_new
+
+    def judge(t, r, a):
+        # 获取当前的位置
+        x, y = t.position()
+        heading = t.heading()
+        heading += 90
+        if (heading > 360):
+            heading -= 360
+        heading_radians = heading * 3.1415926535 / 180.0
+        dx = -r * math.cos(heading_radians)
+        dy = -r * math.sin(heading_radians)
+        x += r * math.cos(heading_radians)
+        y += r * math.sin(heading_radians)
+        angle = 0.0
+        print(x, y)
+        while (angle <= a):
+            vdx, vdy = rot(dx, dy, angle * 3.1415926535 / 180.0)
+            vx = x + vdx
+            vy = y + vdy
+            print(vx, vy)
+            if vx < -285 or vx > 285 or vy < -332 or vy > 332:
+                break
+            angle += 0.01
+        return angle
+
+    def circle(t, r, a):
+        angle = judge(t, r, a)
+        print(angle)
+        t.circle(r, angle)
+
+    def on_closing():
+        popup.destroy()
+
     beginner(t)
     print("circle")
-    t.circle(50)
-
-    pass
+    popup = tk.Frame()
+    popup = tk.Frame(frame, width=300, height=150)
+    popup.place(x=0, y=150)
+    canvas = tk.Canvas(popup, width=300, height=150, bg=f"#{69:02x}{149:02x}{199:02x}")
+    canvas.pack()
+    scale1 = tk.Scale(popup, from_=1, to=200, orient="horizontal", label="半径:")
+    scale1.place(x=180, y=5)
+    scale1.set(50)
+    scale2 = tk.Scale(popup, from_=1, to=360, orient="horizontal", label="角度:")
+    scale2.place(x=20, y=5)
+    scale2.set(360)
+    draw_button = MyButton(popup, "../material/picture/30.png", lambda: circle(t, scale1.get(), scale2.get()))
+    draw_button.place(y=90, x=30)
+    exit_button = MyButton(popup, "../material/picture/22.png", on_closing)
+    exit_button.place(x=210, y=90)
 
 
 def fill(frame, t):
@@ -127,13 +199,14 @@ def fill(frame, t):
     if color[1]:
         # 获取选择的颜色值
         selected_color = color[1]
-    else :
+    else:
         return
     t.fillcolor(selected_color)
     t.begin_fill()
-    button = MyButton(frame , "../material/picture/27.png" , lambda : closing(t))
-    button.place(x = 350 , y = 170)
-    def closing (t) :
+    button = MyButton(frame, "../material/picture/27.png", lambda: closing(t))
+    button.place(x=350, y=170)
+
+    def closing(t):
         t.end_fill()
         button.destroy()
         pass
@@ -186,15 +259,23 @@ def pen_size(frame, t):
         popup.destroy()
 
 
-def pen_up(frame, t):
+# 两个静态变量的button
+
+
+def pen_up(frame, button1, button2, t):
+    button1.place(x=50, y=460)
+    button2.place_forget()
     print("pen_up")
     t.penup()
 
     pass
 
 
-def pen_down(frame, t):
+def pen_down(frame, button1 , button2, t):
     beginner(t)
+    button2.place(x=350, y=460)
+    button1.place_forget()
+
     print("pendown")
     t.down()
     pass
@@ -216,21 +297,17 @@ def clear(t):
 
 
 def save(frame, t):
-    print("save")
-
     # 截屏
+    def capture_screenshot(window):
+        # 获取窗口的位置和大小
+        x = window.winfo_rootx()
+        y = window.winfo_rooty()
+        # 调用系统截屏并保存为图片文件
+        screenshot = ImageGrab.grab(bbox=(x + 925, y + 25, x + 1820, y + 1080))
+        screenshot.save("screenshot.png")
 
-    def CaptureScreen():
-        HWND = win32gui.GetFocus()
-        rect = win32gui.GetWindowRect(HWND)
-        x = rect[0]
-        x1 = x + frame.winfo_x()
-        y = rect[1]
-        y1 = y + frame.winfo_y()
-        im = ImageGrab.grab((x, y, x1, y1))
-        im.save("second.jpeg", 'jpeg')
+    capture_screenshot(frame)
 
-    CaptureScreen()
 
 def welcome(t):
     # 绘制欢迎图案
