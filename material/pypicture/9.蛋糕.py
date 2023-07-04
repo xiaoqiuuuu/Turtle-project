@@ -1,7 +1,7 @@
 # Layer Cake Challenge - www.101computing.net/layer-cake/
 from turtle import *
-from shapes import *
-import shapes
+
+
 import time
 
 myPen = Turtle()
@@ -48,4 +48,4 @@ draw_rectangle(myPen, ingredients["matcha"], -4, y, 8, 60)
 y += 65
 draw_star(myPen, "white", 2, y, 10)
 
-time.sleep(30)
+done()

@@ -1,12 +1,12 @@
 import turtle as t
 import random
 
-t.speed('fast')
+t.speed(0)
 t.hideturtle()
 t.bgcolor('black')
 
 i = 0
-while i < 135:
+while i < 180:
     t.pencolor('cyan')
     t.penup()
     t.goto(0, 0)
@@ -15,3 +15,4 @@ while i < 135:
     t.circle(100)
     t.left(2)
     i += 1
+t.done()

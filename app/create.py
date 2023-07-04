@@ -52,12 +52,12 @@ def add_Keyframe(window, t):
     # 添加功能按钮对应的选择功能
     func = [lambda: move(frame, t), lambda: rotate(frame, t), lambda: Circle(frame, t),
             lambda: fill(frame, t), lambda: pen_color(frame, t), lambda: pen_size(frame, t),
-            lambda: pen_up(frame,button[-2] , button[-1], t), lambda: pen_down(frame,button[-2] , button[-1], t), lambda: cancel(frame, t),
+            lambda: pen_up(frame, button[-2], button[-1], t), lambda: pen_down(frame, button[-2], button[-1], t),
+            lambda: cancel(frame, t),
             lambda: clear(t), lambda: save(frame, t), lambda: des_frame(window, frame, t),
             ]
     for i in range(0, 12):
         button[i].config(command=func[i])
-
 
 
 def create(window, screen):

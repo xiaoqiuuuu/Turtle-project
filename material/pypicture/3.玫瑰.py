@@ -1,5 +1,8 @@
 import turtle
 
+
+turtle.speed(0)
+
 # 设置初始位置
 turtle.penup()
 turtle.left(90)

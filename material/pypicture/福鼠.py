@@ -364,6 +364,6 @@ eyes(-1)
 nose()
 beard()
 hat()
-Originator()
+
 t.done()
  

@@ -1,7 +1,6 @@
 import turtle
 import math
 
-t = turtle.pen()
 t = turtle
 t.up()
 t.goto(0, 150)
@@ -78,4 +77,6 @@ t.down()
 t.goto(-40, -80)
 t.circle(40, extent=180)
 t.goto(40, -30)
-t.hideturtle()
+
+
+t.done()
